@@ -8,13 +8,13 @@ import (
 	pb "github.com/gomeet-examples/svc-profile/pb"
 )
 
-func (s *profileServer) Echo(ctx context.Context, req *pb.EchoRequest) (*pb.EchoResponse, error) {
+func (s *profileServer) HardDelete(ctx context.Context, req *pb.ProfileRequest) (*pb.ProfileResponse, error) {
 	log.Debug(ctx, "service call", log.Fields{"req": req})
 
-	// res := &pb.EchoResponse{}
+	// res := &pb.ProfileResponse{}
 	// Do something useful with req and res
 	// for now a fake response is returned see https://github.com/gomeet/go-proto-gomeetfaker
-	res := pb.NewEchoResponseGomeetFaker()
+	res := pb.NewProfileResponseGomeetFaker()
 
 	return res, nil
 }

@@ -11,8 +11,23 @@ func (c *remoteCli) cmdHelp(args []string) (string, error) {
 	┌─ services_status
 	└─ call services_status service
 
-	┌─ echo <uuid [string]> <content [string]>
-	└─ call echo service
+	┌─ create <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
+	└─ call create service
+
+	┌─ read <uuid [string]>
+	└─ call read service
+
+	┌─ list <page_number [uint32]> <page_size [uint32]> <gender [UNKNOW|MALE|FEMALE]>
+	└─ call list service
+
+	┌─ update <uuid [string]> <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
+	└─ call update service
+
+	┌─ soft_delete <uuid [string]>
+	└─ call soft_delete service
+
+	┌─ hard_delete <uuid [string]>
+	└─ call hard_delete service
 
 	┌─ service_address
 	└─ return service address

@@ -22,7 +22,12 @@ var (
 Example :
   $ svc-profile cli version
   $ svc-profile cli services_status
-  $ svc-profile cli echo <uuid [string]> <content [string]>
+  $ svc-profile cli create <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
+  $ svc-profile cli read <uuid [string]>
+  $ svc-profile cli list <page_number [uint32]> <page_size [uint32]> <gender [UNKNOW|MALE|FEMALE]>
+  $ svc-profile cli update <uuid [string]> <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
+  $ svc-profile cli soft_delete <uuid [string]>
+  $ svc-profile cli hard_delete <uuid [string]>
   $ svc-profile cli --address localhost:42000 version
 
 `,

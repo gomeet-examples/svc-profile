@@ -12,8 +12,12 @@ It has these top-level messages:
 	VersionResponse
 	ServiceStatus
 	ServicesStatusList
-	EchoRequest
-	EchoResponse
+	ProfileInfo
+	ProfileRequest
+	ProfileResponse
+	ProfileCreationRequest
+	ProfileListRequest
+	ProfileList
 */
 package pb
 
@@ -45,62 +49,62 @@ func init() {
 
 func GomeetFakerSetLocale(l string) {
 	switch l {
-	case "es":
-		faker.Locale = locales.Es
-	case "ko":
-		faker.Locale = locales.Ko
-	case "pt-br":
-		faker.Locale = locales.Pt_BR
-	case "de-ch":
-		faker.Locale = locales.De_CH
-	case "ru":
-		faker.Locale = locales.Ru
-	case "vi":
-		faker.Locale = locales.Vi
-	case "zh-cn":
-		faker.Locale = locales.Zh_CN
-	case "en":
-		faker.Locale = locales.En
-	case "it":
-		faker.Locale = locales.It
-	case "en-bork":
-		faker.Locale = locales.En_BORK
-	case "en-us":
-		faker.Locale = locales.En_US
-	case "pl":
-		faker.Locale = locales.Pl
-	case "zh-tw":
-		faker.Locale = locales.Zh_TW
 	case "en-au-ocker":
 		faker.Locale = locales.En_AU_OCKER
-	case "fr":
-		faker.Locale = locales.Fr
-	case "sk":
-		faker.Locale = locales.Sk
-	case "sv":
-		faker.Locale = locales.Sv
+	case "ru":
+		faker.Locale = locales.Ru
+	case "en-nep":
+		faker.Locale = locales.En_NEP
+	case "ja":
+		faker.Locale = locales.Ja
+	case "nl":
+		faker.Locale = locales.Nl
 	case "en-gb":
 		faker.Locale = locales.En_GB
 	case "en-ind":
 		faker.Locale = locales.En_IND
-	case "en-nep":
-		faker.Locale = locales.En_NEP
-	case "nb-no":
-		faker.Locale = locales.Nb_NO
-	case "nl":
-		faker.Locale = locales.Nl
-	case "de":
-		faker.Locale = locales.De
-	case "en-au":
-		faker.Locale = locales.En_AU
-	case "fa":
-		faker.Locale = locales.Fa
+	case "ko":
+		faker.Locale = locales.Ko
+	case "pl":
+		faker.Locale = locales.Pl
+	case "en-bork":
+		faker.Locale = locales.En_BORK
+	case "zh-tw":
+		faker.Locale = locales.Zh_TW
 	case "de-at":
 		faker.Locale = locales.De_AT
+	case "fa":
+		faker.Locale = locales.Fa
+	case "en-us":
+		faker.Locale = locales.En_US
+	case "es":
+		faker.Locale = locales.Es
+	case "it":
+		faker.Locale = locales.It
+	case "de":
+		faker.Locale = locales.De
 	case "en-ca":
 		faker.Locale = locales.En_CA
-	case "ja":
-		faker.Locale = locales.Ja
+	case "sv":
+		faker.Locale = locales.Sv
+	case "zh-cn":
+		faker.Locale = locales.Zh_CN
+	case "en":
+		faker.Locale = locales.En
+	case "fr":
+		faker.Locale = locales.Fr
+	case "nb-no":
+		faker.Locale = locales.Nb_NO
+	case "pt-br":
+		faker.Locale = locales.Pt_BR
+	case "en-au":
+		faker.Locale = locales.En_AU
+	case "vi":
+		faker.Locale = locales.Vi
+	case "de-ch":
+		faker.Locale = locales.De_CH
+	case "sk":
+		faker.Locale = locales.Sk
 	default:
 		faker.Locale = locales.En
 	}
@@ -136,16 +140,55 @@ func NewServicesStatusListGomeetFaker() *ServicesStatusList {
 	return this
 }
 
-func NewEchoRequestGomeetFaker() *EchoRequest {
-	this := &EchoRequest{}
+func NewProfileInfoGomeetFaker() *ProfileInfo {
+	this := &ProfileInfo{}
 	this.Uuid = uuid.New().String()
-	this.Content = faker.Lorem().String()
+	this.Gender = Genders([]int32{1, 2}[GomeetFakerRand().Intn(2)])
+	this.Email = faker.Internet().Email()
+	this.Name = faker.Internet().UserName()
+	aBirthdayTime := faker.Time().Birthday(17, 99)
+	this.Birthday = aBirthdayTime.Format("2006-01-02")
 	return this
 }
 
-func NewEchoResponseGomeetFaker() *EchoResponse {
-	this := &EchoResponse{}
+func NewProfileRequestGomeetFaker() *ProfileRequest {
+	this := &ProfileRequest{}
 	this.Uuid = uuid.New().String()
-	this.Content = faker.Lorem().String()
+	return this
+}
+
+func NewProfileResponseGomeetFaker() *ProfileResponse {
+	this := &ProfileResponse{}
+	this.Ok = true
+	this.Info = NewProfileInfoGomeetFaker()
+	return this
+}
+
+func NewProfileCreationRequestGomeetFaker() *ProfileCreationRequest {
+	this := &ProfileCreationRequest{}
+	this.Gender = Genders([]int32{1, 2}[GomeetFakerRand().Intn(2)])
+	this.Email = faker.Internet().Email()
+	this.Name = faker.Internet().UserName()
+	aBirthdayTime := faker.Time().Birthday(17, 99)
+	this.Birthday = aBirthdayTime.Format("2006-01-02")
+	return this
+}
+
+func NewProfileListRequestGomeetFaker() *ProfileListRequest {
+	this := &ProfileListRequest{}
+	this.PageNumber = uint32(1)
+	this.PageSize = uint32(200)
+	this.Gender = Genders([]int32{1, 2}[GomeetFakerRand().Intn(2)])
+	return this
+}
+
+func NewProfileListGomeetFaker() *ProfileList {
+	this := &ProfileList{}
+	this.ResultSetSize = uint32(5)
+	this.HasMore = false
+	for i := 0; i < 5; i++ {
+		aCurrentProfiles := NewProfileInfoGomeetFaker()
+		this.Profiles = append(this.Profiles, aCurrentProfiles)
+	}
 	return this
 }

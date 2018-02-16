@@ -9,18 +9,18 @@ import (
 	pb "github.com/gomeet-examples/svc-profile/pb"
 )
 
-func TestEcho(t *testing.T) {
+func TestSoftDelete(t *testing.T) {
 	server := newProfileServer()
 	ctx := context.Background()
 
-	req := &pb.EchoRequest{}
+	req := &pb.ProfileRequest{}
 	// You can generate a fake request see https://github.com/gomeet/go-proto-gomeetfaker
-	// req := &pb.EchoRequest{}
-	res, err := server.Echo(ctx, req)
-	assert.Nil(t, err, "Echo: error on call")
-	assert.NotNil(t, res, "Echo: error on call")
+	// req := &pb.ProfileRequest{}
+	res, err := server.SoftDelete(ctx, req)
+	assert.Nil(t, err, "SoftDelete: error on call")
+	assert.NotNil(t, res, "SoftDelete: error on call")
 
 	// Do something useful tests with req and res
 	// for example :
-	// assert.Equal(t, req.GetUuid(), req.GetUuid(), "Echo: Uuid field in response must be the same as that of the request")
+	// assert.Equal(t, req.GetUuid(), req.GetUuid(), "SoftDelete: Uuid field in response must be the same as that of the request")
 }

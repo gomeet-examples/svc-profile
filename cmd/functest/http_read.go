@@ -12,7 +12,7 @@ import (
 	pb "github.com/gomeet-examples/svc-profile/pb"
 )
 
-func TestHttpEcho(config FunctionalTestConfig) (failures []TestFailure) {
+func TestHttpRead(config FunctionalTestConfig) (failures []TestFailure) {
 	client, serverAddr, proto, err := httpClient(config)
 	if err != nil {
 		failures = append(failures, TestFailure{Procedure: "ProfileRead/HTTP", Message: fmt.Sprintf("HTTP client initialization error (%v)", err)})
@@ -20,8 +20,8 @@ func TestHttpEcho(config FunctionalTestConfig) (failures []TestFailure) {
 	}
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetEchoRequest() {
-		url := fmt.Sprintf("%s://%s/api/v1/echo", proto, serverAddr)
+	for _, req := range testGetReadRequest() {
+		url := fmt.Sprintf("%s://%s/api/v1/read", proto, serverAddr)
 
 		// Proto to JSON
 		ma := jsonpb.Marshaler{}
@@ -32,7 +32,7 @@ func TestHttpEcho(config FunctionalTestConfig) (failures []TestFailure) {
 				&TestCaseResult{
 					req,
 					nil,
-					fmt.Errorf("Echo/HTTP POST error to marshalling the message with %s (%v) - %v", url, err, req),
+					fmt.Errorf("Read/HTTP POST error to marshalling the message with %s (%v) - %v", url, err, req),
 				},
 			)
 			continue
@@ -48,7 +48,7 @@ func TestHttpEcho(config FunctionalTestConfig) (failures []TestFailure) {
 				&TestCaseResult{
 					req,
 					nil,
-					fmt.Errorf("Echo/HTTP POST error to construct the http request with %s (%v) - %v", url, err, req),
+					fmt.Errorf("Read/HTTP POST error to construct the http request with %s (%v) - %v", url, err, req),
 				},
 			)
 			continue
@@ -63,17 +63,17 @@ func TestHttpEcho(config FunctionalTestConfig) (failures []TestFailure) {
 				&TestCaseResult{
 					req,
 					nil,
-					fmt.Errorf("Echo/HTTP POST error on %s (%v) - %v", url, err, req),
+					fmt.Errorf("Read/HTTP POST error on %s (%v) - %v", url, err, req),
 				},
 			)
 			continue
 		}
 		defer resp.Body.Close()
 
-		res := &pb.EchoResponse{}
+		res := &pb.ProfileInfo{}
 		err = jsonpb.Unmarshal(resp.Body, res)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testEchoResponse(FUNCTEST_HTTP, testCaseResults)
+	return testReadResponse(FUNCTEST_HTTP, testCaseResults)
 }

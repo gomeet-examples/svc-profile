@@ -21,15 +21,15 @@ swagger = `{
     "application/json"
   ],
   "paths": {
-    "/api/v1/echo": {
+    "/api/v1/create": {
       "post": {
-        "summary": "Echo method receives a simple message and returns it.",
-        "operationId": "Echo",
+        "summary": "Create attempts to create a new profile.",
+        "operationId": "Create",
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/profileEchoResponse"
+              "$ref": "#/definitions/profileProfileResponse"
             }
           }
         },
@@ -39,7 +39,88 @@ swagger = `{
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/profileEchoRequest"
+              "$ref": "#/definitions/profileProfileCreationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/api/v1/hard_delete": {
+      "post": {
+        "summary": "HardDelete attempts to delete an existing profile physically.",
+        "operationId": "HardDelete",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/profileProfileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/api/v1/list": {
+      "post": {
+        "summary": "List returns a list of profiles matching a set of criteria.",
+        "operationId": "List",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/profileProfileList"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileProfileListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/api/v1/read": {
+      "post": {
+        "summary": "Read returns information about an existing profile.",
+        "operationId": "Read",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/profileProfileInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileProfileRequest"
             }
           }
         ],
@@ -60,6 +141,60 @@ swagger = `{
             }
           }
         },
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/api/v1/soft_delete": {
+      "post": {
+        "summary": "SoftDelete attempts to delete an existing profile logically.",
+        "operationId": "SoftDelete",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/profileProfileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/api/v1/update": {
+      "post": {
+        "summary": "Update attempts to update an existing profile.",
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/profileProfileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileProfileInfo"
+            }
+          }
+        ],
         "tags": [
           "Profile"
         ]
@@ -92,29 +227,112 @@ swagger = `{
       ],
       "default": "OK"
     },
-    "profileEchoRequest": {
-      "type": "object",
-      "properties": {
-        "uuid": {
-          "type": "string"
-        },
-        "content": {
-          "type": "string"
-        }
-      },
-      "description": "EchoRequest represents a simple message sent to the Echo service."
+    "profileGenders": {
+      "type": "string",
+      "enum": [
+        "UNKNOW",
+        "MALE",
+        "FEMALE"
+      ],
+      "default": "UNKNOW"
     },
-    "profileEchoResponse": {
+    "profileProfileCreationRequest": {
+      "type": "object",
+      "properties": {
+        "gender": {
+          "$ref": "#/definitions/profileGenders"
+        },
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string"
+        }
+      },
+      "description": "ProfileCreationRequest encodes a profile creation request."
+    },
+    "profileProfileInfo": {
       "type": "object",
       "properties": {
         "uuid": {
           "type": "string"
         },
-        "content": {
+        "gender": {
+          "$ref": "#/definitions/profileGenders"
+        },
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "birthday": {
           "type": "string"
         }
       },
-      "description": "EchoResponse represents a simple message that the Echo service return."
+      "description": "ProfileInfo encodes information about a profile."
+    },
+    "profileProfileList": {
+      "type": "object",
+      "properties": {
+        "result_set_size": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "has_more": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileProfileInfo"
+          }
+        }
+      },
+      "description": "ProfileList encodes the result of a ProfileListRequest."
+    },
+    "profileProfileListRequest": {
+      "type": "object",
+      "properties": {
+        "page_number": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "gender": {
+          "$ref": "#/definitions/profileGenders"
+        }
+      },
+      "description": "ProfileListRequest encodes a set of criteria for the retrieval of a list of profiles."
+    },
+    "profileProfileRequest": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "description": "ProfileRequest encodes a profile identifier."
+    },
+    "profileProfileResponse": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "info": {
+          "$ref": "#/definitions/profileProfileInfo"
+        }
+      },
+      "description": "ProfileResponse encodes the result of a profile operation."
     },
     "profileServiceStatus": {
       "type": "object",

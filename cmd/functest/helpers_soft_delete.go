@@ -4,15 +4,15 @@ import (
 	pb "github.com/gomeet-examples/svc-profile/pb"
 )
 
-func testGetEchoRequest() (reqs []*pb.EchoRequest) {
-	// return an array of pb.EchoRequest struct pointers,
-	// each of them will be passed as an argument to the grpc Echo method
+func testGetSoftDeleteRequest() (reqs []*pb.ProfileRequest) {
+	// return an array of pb.ProfileRequest struct pointers,
+	// each of them will be passed as an argument to the grpc SoftDelete method
 
-	reqs = append(reqs, &pb.EchoRequest{})
+	reqs = append(reqs, &pb.ProfileRequest{})
 	return reqs
 }
 
-func testEchoResponse(
+func testSoftDeleteResponse(
 	testsType string,
 	testCaseResults []*TestCaseResult,
 ) (failures []TestFailure) {
@@ -22,25 +22,25 @@ func testEchoResponse(
 	// testsType value is value of FUNCTEST_HTTP (HTTP) and FUNCTEST_GRPC (GRPC) constants cf. types.go
 	for _, tr := range testCaseResults {
 		var (
-			req *pb.EchoRequest
-			res *pb.EchoResponse
+			req *pb.ProfileRequest
+			res *pb.ProfileResponse
 			err error
 			ok  bool
 		)
 		if tr.Request == nil {
-			failures = append(failures, TestFailure{Procedure: "Echo", Message: "expected request message type pb.EchoRequest - nil given"})
+			failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: "expected request message type pb.ProfileRequest - nil given"})
 			continue
 		}
-		req, ok = tr.Request.(*pb.EchoRequest)
+		req, ok = tr.Request.(*pb.ProfileRequest)
 		if !ok {
-			failures = append(failures, TestFailure{Procedure: "Echo", Message: "expected request message type pb.EchoRequest - cast fail"})
+			failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: "expected request message type pb.ProfileRequest - cast fail"})
 			continue
 		}
 
 		if tr.Response != nil {
-			res, ok = tr.Response.(*pb.EchoResponse)
+			res, ok = tr.Response.(*pb.ProfileResponse)
 			if !ok {
-				failures = append(failures, TestFailure{Procedure: "Echo", Message: "expected response message type pb.EchoRequest - cast fail"})
+				failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: "expected response message type pb.ProfileRequest - cast fail"})
 				continue
 			}
 		}
@@ -49,7 +49,7 @@ func testEchoResponse(
 		err = tr.Error
 		if err != nil {
 			// if no error are expected do something like this
-			// failures = append(failures, TestFailure{Procedure: "Echo", Message: "no error expected"})
+			// failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: "no error expected"})
 			// continue
 		}
 
@@ -57,7 +57,7 @@ func testEchoResponse(
 			// for example :
 			// if res.GetId() != req.GetId() {
 			//     failureMsg := fmt.Sprintf("expected ID \"%s\" but got \"%s\" for request: %v", req.GetId(), res.GetId(), req)
-			//     failures = append(failures, TestFailure{Procedure: "Echo", Message: failureMsg})
+			//     failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: failureMsg})
 			// }
 		}
 	}
