@@ -34,7 +34,7 @@ docker run -d \
   $ svc-profile cli create <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
   $ svc-profile cli read <uuid [string]>
   $ svc-profile cli list <page_number [uint32]> <page_size [uint32]> <gender [UNKNOW|MALE|FEMALE]>
-  $ svc-profile cli update <uuid [string]> <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
+  $ svc-profile cli update <uuid [string]> <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]> <created_at [string]> <updated_at [string]> <deleted_at [string]>
   $ svc-profile cli soft_delete <uuid [string]>
   $ svc-profile cli hard_delete <uuid [string]>
   $ svc-profile cli --address localhost:42000 version
@@ -51,7 +51,7 @@ docker run -d \
   $ curl -X POST   http://localhost:13000/api/v1/create -d '{"gender": "UNKNOW|MALE|FEMALE", "email": "<string>", "name": "<string>", "birthday": "<string>"}'
   $ curl -X POST   http://localhost:13000/api/v1/read -d '{"uuid": "<string>"}'
   $ curl -X POST   http://localhost:13000/api/v1/list -d '{"page_number": <number>, "page_size": <number>, "gender": "UNKNOW|MALE|FEMALE"}'
-  $ curl -X POST   http://localhost:13000/api/v1/update -d '{"uuid": "<string>", "gender": "UNKNOW|MALE|FEMALE", "email": "<string>", "name": "<string>", "birthday": "<string>"}'
+  $ curl -X POST   http://localhost:13000/api/v1/update -d '{"uuid": "<string>", "gender": "UNKNOW|MALE|FEMALE", "email": "<string>", "name": "<string>", "birthday": "<string>", "created_at": "<string>", "updated_at": "<string>", "deleted_at": "<string>"}'
   $ curl -X POST   http://localhost:13000/api/v1/soft_delete -d '{"uuid": "<string>"}'
   $ curl -X POST   http://localhost:13000/api/v1/hard_delete -d '{"uuid": "<string>"}'
   $ curl -X GET    http://localhost:13000/

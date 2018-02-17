@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ```shell
 $ gomeet new github.com/gomeet-examples/svc-profile \
-  --default-prefixes=svc-,gomeet-svc- \
+  --default-prefixes=gomeet-svc-,svc- \
   --proto-name=pb
 ```
 

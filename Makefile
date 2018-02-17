@@ -1,4 +1,4 @@
-DEFAULT_PREFIXES=svc-,gomeet-svc-
+DEFAULT_PREFIXES=gomeet-svc-,svc-
 SVC_PREFIX=svc-
 NAME = $(SVC_PREFIX)profile
 GO_PACKAGE_BASE = github.com/gomeet-examples
