@@ -4,7 +4,9 @@ package functest
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -15,12 +17,18 @@ import (
 func TestHttpHardDelete(config FunctionalTestConfig) (failures []TestFailure) {
 	client, serverAddr, proto, err := httpClient(config)
 	if err != nil {
-		failures = append(failures, TestFailure{Procedure: "ProfileRead/HTTP", Message: fmt.Sprintf("HTTP client initialization error (%v)", err)})
+		failures = append(failures, TestFailure{Procedure: "HardDelete/HTTP", Message: fmt.Sprintf("HTTP client initialization error (%v)", err)})
 		return failures
 	}
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetHardDeleteRequest() {
+	reqs, extras, err := testGetHardDeleteRequest(config)
+	if err != nil {
+		failures = append(failures, TestFailure{Procedure: "HardDelete/HTTP", Message: fmt.Sprintf("HTTP testGetHardDeleteRequest error (%v)", err)})
+		return failures
+	}
+
+	for _, req := range reqs {
 		url := fmt.Sprintf("%s://%s/api/v1/hard_delete", proto, serverAddr)
 
 		// Proto to JSON
@@ -70,10 +78,37 @@ func TestHttpHardDelete(config FunctionalTestConfig) (failures []TestFailure) {
 		}
 		defer resp.Body.Close()
 
-		res := &pb.ProfileResponse{}
-		err = jsonpb.Unmarshal(resp.Body, res)
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			testCaseResults = append(
+				testCaseResults,
+				&TestCaseResult{
+					req,
+					nil,
+					fmt.Errorf("HardDelete/HTTP POST error on %s (%v) - %v - readAll body", url, err, req),
+				},
+			)
+			continue
+		}
+
+		var httpError HttpError
+		err = json.Unmarshal(body, &httpError)
+		if err == nil && (httpError.Code != 0 || httpError.Error != "") {
+			testCaseResults = append(
+				testCaseResults,
+				&TestCaseResult{
+					req,
+					nil,
+					fmt.Errorf("HardDelete/HTTP POST error on %s (Code: %d, Error: %s) - %v", url, httpError.Code, httpError.Error, req),
+				},
+			)
+			continue
+		}
+
+		res := &pb.ProfileResponseLight{}
+		err = jsonpb.UnmarshalString(string(body), res)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testHardDeleteResponse(FUNCTEST_HTTP, testCaseResults)
+	return testHardDeleteResponse(config, FUNCTEST_HTTP, testCaseResults, extras)
 }
