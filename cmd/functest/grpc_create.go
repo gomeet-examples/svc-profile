@@ -15,10 +15,16 @@ func TestCreate(config FunctionalTestConfig) (failures []TestFailure) {
 	defer client.Close()
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetCreateRequest() {
+	reqs, extras, err := testGetCreateRequest(config)
+	if err != nil {
+		failures = append(failures, TestFailure{Procedure: "Create", Message: fmt.Sprintf("HTTP testGetCreateRequest error (%v)", err)})
+		return failures
+	}
+
+	for _, req := range reqs {
 		res, err := client.GetGRPCClient().Create(ctx, req)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testCreateResponse(FUNCTEST_GRPC, testCaseResults)
+	return testCreateResponse(config, FUNCTEST_GRPC, testCaseResults, extras)
 }
