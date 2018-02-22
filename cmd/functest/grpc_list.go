@@ -15,10 +15,16 @@ func TestList(config FunctionalTestConfig) (failures []TestFailure) {
 	defer client.Close()
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetListRequest() {
+	reqs, extras, err := testGetListRequest(config)
+	if err != nil {
+		failures = append(failures, TestFailure{Procedure: "List", Message: fmt.Sprintf("HTTP testGetListRequest error (%v)", err)})
+		return failures
+	}
+
+	for _, req := range reqs {
 		res, err := client.GetGRPCClient().List(ctx, req)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testListResponse(FUNCTEST_GRPC, testCaseResults)
+	return testListResponse(config, FUNCTEST_GRPC, testCaseResults, extras)
 }
