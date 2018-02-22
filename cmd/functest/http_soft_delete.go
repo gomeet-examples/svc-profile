@@ -4,7 +4,9 @@ package functest
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -15,12 +17,18 @@ import (
 func TestHttpSoftDelete(config FunctionalTestConfig) (failures []TestFailure) {
 	client, serverAddr, proto, err := httpClient(config)
 	if err != nil {
-		failures = append(failures, TestFailure{Procedure: "ProfileRead/HTTP", Message: fmt.Sprintf("HTTP client initialization error (%v)", err)})
+		failures = append(failures, TestFailure{Procedure: "SoftDelete/HTTP", Message: fmt.Sprintf("HTTP client initialization error (%v)", err)})
 		return failures
 	}
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetSoftDeleteRequest() {
+	reqs, extras, err := testGetSoftDeleteRequest(config)
+	if err != nil {
+		failures = append(failures, TestFailure{Procedure: "SoftDelete/HTTP", Message: fmt.Sprintf("HTTP testGetSoftDeleteRequest error (%v)", err)})
+		return failures
+	}
+
+	for _, req := range reqs {
 		url := fmt.Sprintf("%s://%s/api/v1/soft_delete", proto, serverAddr)
 
 		// Proto to JSON
@@ -70,10 +78,37 @@ func TestHttpSoftDelete(config FunctionalTestConfig) (failures []TestFailure) {
 		}
 		defer resp.Body.Close()
 
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			testCaseResults = append(
+				testCaseResults,
+				&TestCaseResult{
+					req,
+					nil,
+					fmt.Errorf("SoftDelete/HTTP POST error on %s (%v) - %v - readAll body", url, err, req),
+				},
+			)
+			continue
+		}
+
+		var httpError HttpError
+		err = json.Unmarshal(body, &httpError)
+		if err == nil && (httpError.Code != 0 || httpError.Error != "") {
+			testCaseResults = append(
+				testCaseResults,
+				&TestCaseResult{
+					req,
+					nil,
+					fmt.Errorf("SoftDelete/HTTP POST error on %s (Code: %d, Error: %s) - %v", url, httpError.Code, httpError.Error, req),
+				},
+			)
+			continue
+		}
+
 		res := &pb.ProfileResponse{}
-		err = jsonpb.Unmarshal(resp.Body, res)
+		err = jsonpb.UnmarshalString(string(body), res)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testSoftDeleteResponse(FUNCTEST_HTTP, testCaseResults)
+	return testSoftDeleteResponse(config, FUNCTEST_HTTP, testCaseResults, extras)
 }

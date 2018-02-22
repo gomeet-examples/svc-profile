@@ -15,10 +15,16 @@ func TestSoftDelete(config FunctionalTestConfig) (failures []TestFailure) {
 	defer client.Close()
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetSoftDeleteRequest() {
+	reqs, extras, err := testGetSoftDeleteRequest(config)
+	if err != nil {
+		failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: fmt.Sprintf("HTTP testGetSoftDeleteRequest error (%v)", err)})
+		return failures
+	}
+
+	for _, req := range reqs {
 		res, err := client.GetGRPCClient().SoftDelete(ctx, req)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testSoftDeleteResponse(FUNCTEST_GRPC, testCaseResults)
+	return testSoftDeleteResponse(config, FUNCTEST_GRPC, testCaseResults, extras)
 }
