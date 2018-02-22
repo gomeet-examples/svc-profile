@@ -15,10 +15,16 @@ func TestRead(config FunctionalTestConfig) (failures []TestFailure) {
 	defer client.Close()
 
 	var testCaseResults []*TestCaseResult
-	for _, req := range testGetReadRequest() {
+	reqs, extras, err := testGetReadRequest(config)
+	if err != nil {
+		failures = append(failures, TestFailure{Procedure: "Read", Message: fmt.Sprintf("HTTP testGetReadRequest error (%v)", err)})
+		return failures
+	}
+
+	for _, req := range reqs {
 		res, err := client.GetGRPCClient().Read(ctx, req)
 		testCaseResults = append(testCaseResults, &TestCaseResult{req, res, err})
 	}
 
-	return testReadResponse(FUNCTEST_GRPC, testCaseResults)
+	return testReadResponse(config, FUNCTEST_GRPC, testCaseResults, extras)
 }
