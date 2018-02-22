@@ -15,6 +15,7 @@ It has these top-level messages:
 	ProfileInfo
 	ProfileRequest
 	ProfileResponse
+	ProfileResponseLight
 	ProfileCreationRequest
 	ProfileListRequest
 	ProfileList
@@ -49,62 +50,62 @@ func init() {
 
 func GomeetFakerSetLocale(l string) {
 	switch l {
-	case "en-au-ocker":
-		faker.Locale = locales.En_AU_OCKER
-	case "ru":
-		faker.Locale = locales.Ru
-	case "en-nep":
-		faker.Locale = locales.En_NEP
-	case "ja":
-		faker.Locale = locales.Ja
-	case "nl":
-		faker.Locale = locales.Nl
-	case "en-gb":
-		faker.Locale = locales.En_GB
+	case "en-bork":
+		faker.Locale = locales.En_BORK
 	case "en-ind":
 		faker.Locale = locales.En_IND
 	case "ko":
 		faker.Locale = locales.Ko
-	case "pl":
-		faker.Locale = locales.Pl
-	case "en-bork":
-		faker.Locale = locales.En_BORK
-	case "zh-tw":
-		faker.Locale = locales.Zh_TW
-	case "de-at":
-		faker.Locale = locales.De_AT
-	case "fa":
-		faker.Locale = locales.Fa
-	case "en-us":
-		faker.Locale = locales.En_US
-	case "es":
-		faker.Locale = locales.Es
 	case "it":
 		faker.Locale = locales.It
-	case "de":
-		faker.Locale = locales.De
-	case "en-ca":
-		faker.Locale = locales.En_CA
-	case "sv":
-		faker.Locale = locales.Sv
+	case "de-ch":
+		faker.Locale = locales.De_CH
+	case "en-gb":
+		faker.Locale = locales.En_GB
+	case "en-us":
+		faker.Locale = locales.En_US
+	case "en-au-ocker":
+		faker.Locale = locales.En_AU_OCKER
+	case "ja":
+		faker.Locale = locales.Ja
 	case "zh-cn":
 		faker.Locale = locales.Zh_CN
 	case "en":
 		faker.Locale = locales.En
-	case "fr":
-		faker.Locale = locales.Fr
-	case "nb-no":
-		faker.Locale = locales.Nb_NO
-	case "pt-br":
-		faker.Locale = locales.Pt_BR
-	case "en-au":
-		faker.Locale = locales.En_AU
-	case "vi":
-		faker.Locale = locales.Vi
-	case "de-ch":
-		faker.Locale = locales.De_CH
+	case "fa":
+		faker.Locale = locales.Fa
+	case "nl":
+		faker.Locale = locales.Nl
+	case "en-ca":
+		faker.Locale = locales.En_CA
+	case "ru":
+		faker.Locale = locales.Ru
 	case "sk":
 		faker.Locale = locales.Sk
+	case "vi":
+		faker.Locale = locales.Vi
+	case "de":
+		faker.Locale = locales.De
+	case "en-au":
+		faker.Locale = locales.En_AU
+	case "pl":
+		faker.Locale = locales.Pl
+	case "en-nep":
+		faker.Locale = locales.En_NEP
+	case "pt-br":
+		faker.Locale = locales.Pt_BR
+	case "zh-tw":
+		faker.Locale = locales.Zh_TW
+	case "nb-no":
+		faker.Locale = locales.Nb_NO
+	case "sv":
+		faker.Locale = locales.Sv
+	case "de-at":
+		faker.Locale = locales.De_AT
+	case "es":
+		faker.Locale = locales.Es
+	case "fr":
+		faker.Locale = locales.Fr
 	default:
 		faker.Locale = locales.En
 	}
@@ -148,6 +149,9 @@ func NewProfileInfoGomeetFaker() *ProfileInfo {
 	this.Name = faker.Internet().UserName()
 	aBirthdayTime := faker.Time().Birthday(17, 99)
 	this.Birthday = aBirthdayTime.Format("2006-01-02")
+	this.CreatedAt = time.Now().Format("2006-01-02T15:04:05Z07:00")
+	this.UpdatedAt = time.Now().Format("2006-01-02T15:04:05Z07:00")
+	this.DeletedAt = time.Now().Format("2006-01-02T15:04:05Z07:00")
 	return this
 }
 
@@ -161,6 +165,12 @@ func NewProfileResponseGomeetFaker() *ProfileResponse {
 	this := &ProfileResponse{}
 	this.Ok = true
 	this.Info = NewProfileInfoGomeetFaker()
+	return this
+}
+
+func NewProfileResponseLightGomeetFaker() *ProfileResponseLight {
+	this := &ProfileResponseLight{}
+	this.Ok = true
 	return this
 }
 
@@ -178,6 +188,9 @@ func NewProfileListRequestGomeetFaker() *ProfileListRequest {
 	this := &ProfileListRequest{}
 	this.PageNumber = uint32(1)
 	this.PageSize = uint32(200)
+	this.Order = "created_at asc"
+	this.ExcludeSoftDeleted = true
+	this.SoftDeletedOnly = false
 	this.Gender = Genders([]int32{1, 2}[GomeetFakerRand().Intn(2)])
 	return this
 }

@@ -56,7 +56,7 @@ swagger = `{
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/profileProfileResponse"
+              "$ref": "#/definitions/profileProfileResponseLight"
             }
           }
         },
@@ -271,6 +271,15 @@ swagger = `{
         },
         "birthday": {
           "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "deleted_at": {
+          "type": "string"
         }
       },
       "description": "ProfileInfo encodes information about a profile."
@@ -306,6 +315,17 @@ swagger = `{
           "type": "integer",
           "format": "int64"
         },
+        "order": {
+          "type": "string"
+        },
+        "exclude_soft_deleted": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "soft_deleted_only": {
+          "type": "boolean",
+          "format": "boolean"
+        },
         "gender": {
           "$ref": "#/definitions/profileGenders"
         }
@@ -333,6 +353,16 @@ swagger = `{
         }
       },
       "description": "ProfileResponse encodes the result of a profile operation."
+    },
+    "profileProfileResponseLight": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "description": "ProfileResponseLight encodes the result of a profile operation."
     },
     "profileServiceStatus": {
       "type": "object",

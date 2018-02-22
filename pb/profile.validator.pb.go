@@ -15,6 +15,7 @@ It has these top-level messages:
 	ProfileInfo
 	ProfileRequest
 	ProfileResponse
+	ProfileResponseLight
 	ProfileCreationRequest
 	ProfileListRequest
 	ProfileList
@@ -93,6 +94,9 @@ func (this *ProfileResponse) Validate() error {
 			return go_proto_validators.FieldError("Info", err)
 		}
 	}
+	return nil
+}
+func (this *ProfileResponseLight) Validate() error {
 	return nil
 }
 

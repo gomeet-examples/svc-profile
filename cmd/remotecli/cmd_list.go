@@ -10,8 +10,8 @@ import (
 )
 
 func (c *remoteCli) cmdList(args []string) (string, error) {
-	if len(args) < 3 {
-		return "", errors.New("Bad arguments : list <page_number [uint32]> <page_size [uint32]> <gender [UNKNOW|MALE|FEMALE]>")
+	if len(args) < 6 {
+		return "", errors.New("Bad arguments : list <page_number [uint32]> <page_size [uint32]> <order [string]> <exclude_soft_deleted [bool]> <soft_deleted_only [bool]> <gender [UNKNOW|MALE|FEMALE]>")
 	}
 
 	// request message
@@ -36,10 +36,27 @@ func (c *remoteCli) cmdList(args []string) (string, error) {
 	reqPageSizeCast := uint32(reqPageSize)
 	req.PageSize = reqPageSizeCast
 
-	// cast args[2] in req.Gender - type TYPE_ENUM to go type *grpc.Genders
-	reqGender, ok := pb.Genders_value[strings.ToUpper(args[2])]
+	// cast args[2] in req.Order - type TYPE_STRING to go type string
+	req.Order = args[2]
+
+	// cast args[3] in req.ExcludeSoftDeleted - type TYPE_BOOL to go type bool
+	reqExcludeSoftDeleted, err := strconv.ParseBool(args[3])
+	if err != nil {
+		return "", fmt.Errorf("Bad arguments : exclude_soft_deleted is not bool")
+	}
+	req.ExcludeSoftDeleted = reqExcludeSoftDeleted
+
+	// cast args[4] in req.SoftDeletedOnly - type TYPE_BOOL to go type bool
+	reqSoftDeletedOnly, err := strconv.ParseBool(args[4])
+	if err != nil {
+		return "", fmt.Errorf("Bad arguments : soft_deleted_only is not bool")
+	}
+	req.SoftDeletedOnly = reqSoftDeletedOnly
+
+	// cast args[5] in req.Gender - type TYPE_ENUM to go type *grpc.Genders
+	reqGender, ok := pb.Genders_value[strings.ToUpper(args[5])]
 	if !ok {
-		return "", fmt.Errorf("Bad arguments : unknown gender \"%s\"", args[2])
+		return "", fmt.Errorf("Bad arguments : unknown gender \"%s\"", args[5])
 	}
 	req.Gender = pb.Genders(reqGender)
 

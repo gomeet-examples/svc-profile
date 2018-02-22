@@ -10,6 +10,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
 	"github.com/gomeet/gomeet/utils/jwt"
@@ -19,9 +20,9 @@ import (
 )
 
 var (
-	useEmbeddedServer           bool
-	useRandomPort               bool
-	mysqlFunctestDataSourceName string
+	useEmbeddedServer    bool
+	useRandomPort        bool
+	mysqlFunctestMigrate bool
 
 	// funcTestCmd represents the functest command
 	funcTestCmd = &cobra.Command{
@@ -35,6 +36,9 @@ var (
 
 func init() {
 	RootCmd.AddCommand(funcTestCmd)
+
+	// force debug mode
+	funcTestCmd.PersistentFlags().BoolVarP(&debugMode, "debug", "d", false, "Force debug mode")
 
 	// address flag (to serve all protocols on a single port)
 	funcTestCmd.PersistentFlags().StringVarP(&serverAddress, "address", "a", "localhost:13000", "Multiplexed gRPC/HTTP server address")
@@ -69,8 +73,10 @@ func init() {
 	// random port server flag
 	funcTestCmd.PersistentFlags().BoolVar(&useRandomPort, "random-port", false, "Use a random port for the embedded server")
 
+	// Mysql data migration on start
+	funcTestCmd.PersistentFlags().BoolVar(&mysqlFunctestMigrate, "mysql-migrate", false, "Mysql data migration on start")
 	// Mysql data source name: https://github.com/go-sql-driver/mysql#dsn-data-source-name
-	funcTestCmd.PersistentFlags().StringVar(&mysqlFunctestDataSourceName, "mysql-dsn", "", "Mysql connection informations (USERNAME:PASSWORD@tcp(HOSTNAME:3306)/DBNAME)")
+	funcTestCmd.PersistentFlags().StringVar(&mysqlDataSourceName, "mysql-dsn", "", "Mysql connection informations (USERNAME:PASSWORD@tcp(HOSTNAME:3306)/DBNAME)")
 }
 
 // getFreePort asks the kernel for a free open port that is ready to use.
@@ -90,6 +96,12 @@ func getFreePort() (int, error) {
 
 func runFunctionalTests() {
 	if useEmbeddedServer {
+		if debugMode {
+			log.SetLevel(log.DebugLevel)
+		} else {
+			// by default for embedded server only panic are logged
+			log.SetLevel(log.PanicLevel)
+		}
 		if useRandomPort {
 			freePort, err := getFreePort()
 			if err == nil {
@@ -123,12 +135,12 @@ func runFunctionalTests() {
 	}
 
 	// initialize the mysql database schema
-	if mysqlFunctestDataSourceName != "" {
-		if strings.Contains(mysqlFunctestDataSourceName, "?") {
+	if mysqlDataSourceName != "" && mysqlFunctestMigrate {
+		if strings.Contains(mysqlDataSourceName, "?") {
 			fmt.Println("database connection error: data source name cannot contain options")
 			os.Exit(1)
 		}
-		mysqlDSN := fmt.Sprintf("%s?charset=utf8&parseTime=True", mysqlFunctestDataSourceName)
+		mysqlDSN := fmt.Sprintf("%s?charset=utf8&parseTime=True", mysqlDataSourceName)
 
 		mysqlDB, err := gorm.Open("mysql", mysqlDSN)
 		if err != nil {
@@ -141,7 +153,7 @@ func runFunctionalTests() {
 			fmt.Printf("Ping database connection error (DSN \"%s\"): %v\n", mysqlDSN, err)
 			os.Exit(1)
 		}
-		err = models.MigrateSchema(mysqlFunctestDataSourceName)
+		err = models.MigrateSchema(mysqlDataSourceName)
 
 		if err != nil {
 			fmt.Printf("Mysql schema migration error: %s\n", err)
@@ -150,20 +162,22 @@ func runFunctionalTests() {
 	}
 
 	testConfig := functest.FunctionalTestConfig{
-		ServerAddress:     serverAddress,
-		GrpcServerAddress: grpcServerAddress,
-		HttpServerAddress: httpServerAddress,
-		CaCertificate:     caCertificate,
-		ClientCertificate: serverCertificate,
-		ClientPrivateKey:  serverPrivateKey,
-		TimeoutSeconds:    timeoutSeconds,
-		JsonWebToken:      jwtToken,
+		ServerAddress:       serverAddress,
+		GrpcServerAddress:   grpcServerAddress,
+		HttpServerAddress:   httpServerAddress,
+		CaCertificate:       caCertificate,
+		ClientCertificate:   serverCertificate,
+		ClientPrivateKey:    serverPrivateKey,
+		TimeoutSeconds:      timeoutSeconds,
+		JsonWebToken:        jwtToken,
+		MysqlDataSourceName: mysqlDataSourceName,
 	}
 
 	failures := runFunctionalTestSession(testConfig)
 
 	if len(failures) == 0 {
-		fmt.Printf("OK\n")
+		fmt.Println("PASS")
+		fmt.Println("ok\tfunctest is ok")
 
 		os.Exit(0)
 	} else {

@@ -17,10 +17,10 @@ func (c *remoteCli) cmdHelp(args []string) (string, error) {
 	┌─ read <uuid [string]>
 	└─ call read service
 
-	┌─ list <page_number [uint32]> <page_size [uint32]> <gender [UNKNOW|MALE|FEMALE]>
+	┌─ list <page_number [uint32]> <page_size [uint32]> <order [string]> <exclude_soft_deleted [bool]> <soft_deleted_only [bool]> <gender [UNKNOW|MALE|FEMALE]>
 	└─ call list service
 
-	┌─ update <uuid [string]> <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]>
+	┌─ update <uuid [string]> <gender [UNKNOW|MALE|FEMALE]> <email [string]> <name [string]> <birthday [string]> <created_at [string]> <updated_at [string]> <deleted_at [string]>
 	└─ call update service
 
 	┌─ soft_delete <uuid [string]>

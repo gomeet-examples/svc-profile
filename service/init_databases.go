@@ -10,6 +10,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type GormLogger struct{}
+
+func (*GormLogger) Print(v ...interface{}) {
+	if v[0] == "sql" {
+		log.WithFields(log.Fields{"module": "gorm", "type": "sql"}).Debug(v[3])
+	}
+	if v[0] == "log" {
+		log.WithFields(log.Fields{"module": "gorm", "type": "log"}).Warn(v[2])
+	}
+}
+
 // initDatabaseHandle initializes the databases handles of the server.
 func (s *profileServer) initDatabaseHandle() error {
 	// establish the connection if it's not ready
@@ -26,6 +37,8 @@ func (s *profileServer) initDatabaseHandle() error {
 			}).Infof("database connection error: %v", err)
 			return err
 		}
+		mysqlHandle.SetLogger(&GormLogger{})
+		mysqlHandle.LogMode(true)
 		s.mysqlHandle = mysqlHandle
 	}
 
