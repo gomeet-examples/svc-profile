@@ -16,7 +16,8 @@ func init() {
 }
 
 func newProfileServerTest(t *testing.T) (*profileServer, *gorm.DB, error) {
-	// FIXME: do something better with mock?
+	// FIXME: do something better with mock? or with ENV VAR or with flags
+	// see. https://siongui.github.io/2017/04/28/command-line-argument-in-golang-test/
 	dsn := "gomeet:totomysql@tcp(localhost:3306)/svc_profile_test"
 	models.MigrateSchema(dsn)
 	server := &profileServer{
