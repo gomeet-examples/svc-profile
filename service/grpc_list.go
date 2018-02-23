@@ -21,7 +21,6 @@ func (s *profileServer) List(ctx context.Context, req *pb.ProfileListRequest) (*
 	if err := req.Validate(); err != nil {
 		log.Warn(ctx, "invalid request", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Error(codes.InvalidArgument, err.Error())
@@ -57,9 +56,7 @@ func (s *profileServer) List(ctx context.Context, req *pb.ProfileListRequest) (*
 	// init database if not ready yet
 	err := s.initDatabaseHandle()
 	if err != nil {
-		log.Warn(ctx, "Fail to initDatabase", err, log.Fields{
-			"err": err,
-		})
+		log.Warn(ctx, "Fail to initDatabase", err, log.Fields{})
 
 		return res, status.Errorf(codes.Internal, err.Error())
 	}
@@ -76,7 +73,6 @@ func (s *profileServer) List(ctx context.Context, req *pb.ProfileListRequest) (*
 	if err != nil {
 		log.Error(ctx, "database select error", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Errorf(codes.InvalidArgument, err.Error())

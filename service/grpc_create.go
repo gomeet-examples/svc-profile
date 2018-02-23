@@ -24,7 +24,6 @@ func (s *profileServer) Create(ctx context.Context, req *pb.ProfileCreationReque
 	if err := req.Validate(); err != nil {
 		log.Warn(ctx, "invalid request", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Error(codes.InvalidArgument, err.Error())
@@ -33,10 +32,7 @@ func (s *profileServer) Create(ctx context.Context, req *pb.ProfileCreationReque
 	// init database if not ready yet
 	err := s.initDatabaseHandle()
 	if err != nil {
-		log.Warn(ctx, "Fail to initDatabase", err, log.Fields{
-			"err":          err,
-			"HUG______dsn": s.mysqlDataSourceName,
-		})
+		log.Warn(ctx, "Fail to initDatabase", err, log.Fields{})
 
 		return res, status.Errorf(codes.Internal, err.Error())
 	}
@@ -52,7 +48,6 @@ func (s *profileServer) Create(ctx context.Context, req *pb.ProfileCreationReque
 	if err != nil {
 		log.Error(ctx, "database insert error", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Errorf(codes.InvalidArgument, err.Error())

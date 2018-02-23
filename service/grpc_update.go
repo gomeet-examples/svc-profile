@@ -26,7 +26,6 @@ func (s *profileServer) Update(ctx context.Context, req *pb.ProfileInfo) (*pb.Pr
 	if err := req.Validate(); err != nil {
 		log.Warn(ctx, "invalid request", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Error(codes.InvalidArgument, err.Error())
@@ -38,7 +37,6 @@ func (s *profileServer) Update(ctx context.Context, req *pb.ProfileInfo) (*pb.Pr
 		err := errors.New("Missing Uuid")
 		log.Warn(ctx, "invalid request - missing Uuid", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Error(codes.InvalidArgument, "Uuid is required")
@@ -47,9 +45,7 @@ func (s *profileServer) Update(ctx context.Context, req *pb.ProfileInfo) (*pb.Pr
 	// init database if not ready yet
 	err := s.initDatabaseHandle()
 	if err != nil {
-		log.Warn(ctx, "Fail to initDatabase", err, log.Fields{
-			"err": err,
-		})
+		log.Warn(ctx, "Fail to initDatabase", err, log.Fields{})
 		return res, status.Errorf(codes.Internal, err.Error())
 	}
 
@@ -64,7 +60,6 @@ func (s *profileServer) Update(ctx context.Context, req *pb.ProfileInfo) (*pb.Pr
 	if err != nil {
 		log.Error(ctx, "database update error", err, log.Fields{
 			"req": req,
-			"err": err,
 		})
 
 		return res, status.Errorf(codes.InvalidArgument, err.Error())
