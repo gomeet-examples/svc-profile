@@ -137,10 +137,11 @@ func (p *Project) SetSubServices(subServices []string) error {
 	return nil
 }
 
-func (p *Project) setProjectCreationTree(keepFile, keepProto bool) (err error) {
+func (p *Project) setProjectCreationTree(keepFile, keepProtoModel bool) (err error) {
 	f := newFolder(p.Name(), p.Path())
 	f.addTree(".", "project-creation", nil, keepFile)
 	pbFolder := f.getFolder("pb")
+	modelsFolder := f.getFolder("models")
 
 	// reset "pb" folder if proto alias isn't "pb"
 	protoAlias, err := p.GoProtoPkgAlias()
@@ -159,7 +160,13 @@ func (p *Project) setProjectCreationTree(keepFile, keepProto bool) (err error) {
 	if err != nil {
 		return err
 	}
-	pbFile.KeepIfExists = keepProto
+	pbFile.KeepIfExists = keepProtoModel
+
+	modelsFile, err := modelsFolder.getFile("models.go")
+	if err != nil {
+		return err
+	}
+	modelsFile.KeepIfExists = keepProtoModel
 
 	// rename generic proto.proto to <short project name>.proto
 	err = pbFolder.renameFile(
@@ -180,8 +187,8 @@ func (p *Project) setProjectCreationTree(keepFile, keepProto bool) (err error) {
 	return nil
 }
 
-func (p *Project) ProjectCreation(keepFile, keepProto bool) error {
-	if err := p.setProjectCreationTree(keepFile, keepProto); err != nil {
+func (p *Project) ProjectCreation(keepFile, keepProtoModel bool) error {
+	if err := p.setProjectCreationTree(keepFile, keepProtoModel); err != nil {
 		return err
 	}
 	if _, err := os.Stat(p.Path()); os.IsNotExist(err) {
@@ -190,17 +197,18 @@ func (p *Project) ProjectCreation(keepFile, keepProto bool) error {
 			return err
 		}
 	}
-
-	if err := p.folder.render(*p); err != nil {
+	err := p.folder.render(*p)
+	if err != nil {
 		return nil
 	}
 
-	if err := filepath.Walk(p.Path()+"/hack/", func(name string, info os.FileInfo, err error) error {
+	err = filepath.Walk(p.Path()+"/hack/", func(name string, info os.FileInfo, err error) error {
 		if err == nil {
 			err = os.Chmod(name, 0755)
 		}
 		return err
-	}); err != nil {
+	})
+	if err != nil {
 		return err
 	}
 
@@ -337,6 +345,7 @@ func (p *Project) GenFromProto(req *plugin.CodeGeneratorRequest) error {
 	cmd.addFile("migrate.go", "protoc-gen/cmd/migrate.go.tmpl", nil, false)
 	functest := cmd.addFolder("functest")
 	functest.addFile("http_metrics.go", "protoc-gen/cmd/functest/http_metrics.go.tmpl", nil, false)
+	functest.addFile("types.go", "protoc-gen/cmd/functest/types.go.tmpl", nil, false)
 	f.addTree("client", "protoc-gen/client", nil, false)
 	f.addTree("docs", "protoc-gen/docs", nil, false)
 	rcli := cmd.addFolder("remotecli")

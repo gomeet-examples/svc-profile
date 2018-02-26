@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article>
+  <title>Protocol Documentation</title>
+  
+  <section>
+    <title>profile.proto</title>
+    <para></para>
+    
+    <section id="grpc.gomeetexamples.profile.EmptyMessage">
+      <title>EmptyMessage</title>
+      <para></para>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileCreationRequest">
+      <title>ProfileCreationRequest</title>
+      <para>ProfileCreationRequest encodes a profile creation request.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileCreationRequest</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>gender</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.Genders">Genders</link></entry>
+              <entry></entry>
+              <entry><para>profile role</para></entry>
+            </row>
+            
+            <row>
+              <entry>email</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile email</para></entry>
+            </row>
+            
+            <row>
+              <entry>name</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile name</para></entry>
+            </row>
+            
+            <row>
+              <entry>birthday</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile birthday</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileInfo">
+      <title>ProfileInfo</title>
+      <para>ProfileInfo encodes information about a profile.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileInfo</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>uuid</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>internal profile ID</para></entry>
+            </row>
+            
+            <row>
+              <entry>gender</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.Genders">Genders</link></entry>
+              <entry></entry>
+              <entry><para>profile role</para></entry>
+            </row>
+            
+            <row>
+              <entry>email</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile email</para></entry>
+            </row>
+            
+            <row>
+              <entry>name</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile name</para></entry>
+            </row>
+            
+            <row>
+              <entry>birthday</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile birthday</para></entry>
+            </row>
+            
+            <row>
+              <entry>created_at</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>creation time (UTC - RFC 3339 format)</para></entry>
+            </row>
+            
+            <row>
+              <entry>updated_at</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>modification time (UTC - RFC 3339 format)</para></entry>
+            </row>
+            
+            <row>
+              <entry>deleted_at</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>deletion time (UTC - RFC 3339 format if the profile was logically deleted, empty otherwise)</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileList">
+      <title>ProfileList</title>
+      <para>ProfileList encodes the result of a ProfileListRequest.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileList</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>result_set_size</entry>
+              <entry><link linkend="uint32">uint32</link></entry>
+              <entry></entry>
+              <entry><para>total number of results</para></entry>
+            </row>
+            
+            <row>
+              <entry>has_more</entry>
+              <entry><link linkend="bool">bool</link></entry>
+              <entry></entry>
+              <entry><para>true if there are more results for the ProfileListRequest</para></entry>
+            </row>
+            
+            <row>
+              <entry>profiles</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileInfo">ProfileInfo</link></entry>
+              <entry>repeated</entry>
+              <entry><para>list of ProfileInfo messages</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileListRequest">
+      <title>ProfileListRequest</title>
+      <para>ProfileListRequest encodes a set of criteria for the retrieval of a list of profiles.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileListRequest</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>page_number</entry>
+              <entry><link linkend="uint32">uint32</link></entry>
+              <entry></entry>
+              <entry><para>page number (starting from 1)</para></entry>
+            </row>
+            
+            <row>
+              <entry>page_size</entry>
+              <entry><link linkend="uint32">uint32</link></entry>
+              <entry></entry>
+              <entry><para>number of results in a page</para></entry>
+            </row>
+            
+            <row>
+              <entry>order</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>result ordering specification (default "created_at asc")</para></entry>
+            </row>
+            
+            <row>
+              <entry>exclude_soft_deleted</entry>
+              <entry><link linkend="bool">bool</link></entry>
+              <entry></entry>
+              <entry><para>if true, excludes logically-deleted profiles from the result set</para></entry>
+            </row>
+            
+            <row>
+              <entry>soft_deleted_only</entry>
+              <entry><link linkend="bool">bool</link></entry>
+              <entry></entry>
+              <entry><para>if true, restricts the result set to logically-deleted profiles</para></entry>
+            </row>
+            
+            <row>
+              <entry>gender</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.Genders">Genders</link></entry>
+              <entry></entry>
+              <entry><para>role to search for</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileRequest">
+      <title>ProfileRequest</title>
+      <para>ProfileRequest encodes a profile identifier.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileRequest</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>uuid</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>profile ID</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileResponse">
+      <title>ProfileResponse</title>
+      <para>ProfileResponse encodes the result of a profile operation.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileResponse</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>ok</entry>
+              <entry><link linkend="bool">bool</link></entry>
+              <entry></entry>
+              <entry><para>indicates whether the operation (authentication, creation, update or delete) was successful</para></entry>
+            </row>
+            
+            <row>
+              <entry>info</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileInfo">ProfileInfo</link></entry>
+              <entry></entry>
+              <entry><para>profile information (unreliable if the operation failed)</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ProfileResponseLight">
+      <title>ProfileResponseLight</title>
+      <para>ProfileResponseLight encodes the result of a profile operation.</para>
+      
+      <table frame="all">
+        <title><classname>ProfileResponseLight</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>ok</entry>
+              <entry><link linkend="bool">bool</link></entry>
+              <entry></entry>
+              <entry><para>indicates whether the operation was successful</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ServiceStatus">
+      <title>ServiceStatus</title>
+      <para>SeviceStatus represents a sub services status message</para>
+      
+      <table frame="all">
+        <title><classname>ServiceStatus</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>name</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>name of service</para></entry>
+            </row>
+            
+            <row>
+              <entry>version</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>version of service</para></entry>
+            </row>
+            
+            <row>
+              <entry>status</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ServiceStatus.Status">ServiceStatus.Status</link></entry>
+              <entry></entry>
+              <entry><para>status of service see enum Status</para></entry>
+            </row>
+            
+            <row>
+              <entry>e_msg</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para></para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ServicesStatusList">
+      <title>ServicesStatusList</title>
+      <para>ServicesStatusList is the sub services status list</para>
+      
+      <table frame="all">
+        <title><classname>ServicesStatusList</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>services</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ServiceStatus">ServiceStatus</link></entry>
+              <entry>repeated</entry>
+              <entry><para></para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.VersionResponse">
+      <title>VersionResponse</title>
+      <para>VersionMessage represents a version message</para>
+      
+      <table frame="all">
+        <title><classname>VersionResponse</classname> Fields</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="0.5*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Field</entry>
+              <entry>Type</entry>
+              <entry>Label</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>name</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para>Id represents the message identifier.</para></entry>
+            </row>
+            
+            <row>
+              <entry>version</entry>
+              <entry><link linkend="string">string</link></entry>
+              <entry></entry>
+              <entry><para></para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+      
+      
+    </section>
+    
+    
+    <section id="grpc.gomeetexamples.profile.Genders">
+      <title>Genders</title>
+      <para></para>
+      <table frame="all">
+        <title><classname>Genders</classname> Values</title>
+        <tgroup cols="3">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Name</entry>
+              <entry>Number</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>UNKNOW</entry>
+              <entry>0</entry>
+              <entry><para>normaly never</para></entry>
+            </row>
+            
+            <row>
+              <entry>MALE</entry>
+              <entry>1</entry>
+              <entry><para>male gender</para></entry>
+            </row>
+            
+            <row>
+              <entry>FEMALE</entry>
+              <entry>2</entry>
+              <entry><para>female gender</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    
+    <section id="grpc.gomeetexamples.profile.ServiceStatus.Status">
+      <title>ServiceStatus.Status</title>
+      <para></para>
+      <table frame="all">
+        <title><classname>ServiceStatus.Status</classname> Values</title>
+        <tgroup cols="3">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Name</entry>
+              <entry>Number</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>OK</entry>
+              <entry>0</entry>
+              <entry><para></para></entry>
+            </row>
+            
+            <row>
+              <entry>UNAVAILABLE</entry>
+              <entry>1</entry>
+              <entry><para></para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    
+
+    
+
+    
+    <section id="grpc.gomeetexamples.profile.Profile">
+      <title>Profile</title>
+      <para></para>
+      <table frame="all">
+        <title><classname>Profile</classname> Methods</title>
+        <tgroup cols="4">
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Method Name</entry>
+              <entry>Request Type</entry>
+              <entry>Response Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            
+            <row>
+              <entry>Version</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.EmptyMessage">EmptyMessage</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.VersionResponse">VersionResponse</link></entry>
+              <entry><para>Version method receives no paramaters and returns a version message.</para></entry>
+            </row>
+            
+            <row>
+              <entry>ServicesStatus</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.EmptyMessage">EmptyMessage</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ServicesStatusList">ServicesStatusList</link></entry>
+              <entry><para>ServicesStatus method receives no paramaters and returns all services status message</para></entry>
+            </row>
+            
+            <row>
+              <entry>Create</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileCreationRequest">ProfileCreationRequest</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileResponse">ProfileResponse</link></entry>
+              <entry><para>Create attempts to create a new profile.</para></entry>
+            </row>
+            
+            <row>
+              <entry>Read</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileRequest">ProfileRequest</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileInfo">ProfileInfo</link></entry>
+              <entry><para>Read returns information about an existing profile.</para></entry>
+            </row>
+            
+            <row>
+              <entry>List</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileListRequest">ProfileListRequest</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileList">ProfileList</link></entry>
+              <entry><para>List returns a list of profiles matching a set of criteria.</para></entry>
+            </row>
+            
+            <row>
+              <entry>Update</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileInfo">ProfileInfo</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileResponse">ProfileResponse</link></entry>
+              <entry><para>Update attempts to update an existing profile.</para></entry>
+            </row>
+            
+            <row>
+              <entry>SoftDelete</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileRequest">ProfileRequest</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileResponse">ProfileResponse</link></entry>
+              <entry><para>SoftDelete attempts to delete an existing profile logically.</para></entry>
+            </row>
+            
+            <row>
+              <entry>HardDelete</entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileRequest">ProfileRequest</link></entry>
+              <entry><link linkend="grpc.gomeetexamples.profile.ProfileResponseLight">ProfileResponseLight</link></entry>
+              <entry><para>HardDelete attempts to delete an existing profile physically.</para></entry>
+            </row>
+            
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    
+  </section>
+  
+
+  <section>
+    <title>Scalar Value Types</title>
+    <informaltable frame="all">
+      <tgroup cols="5">
+        <colspec colwidth="*"/>
+        <colspec colwidth="5*"/>
+        <colspec colwidth="*"/>
+        <colspec colwidth="*"/>
+        <colspec colwidth="*"/>
+        <thead>
+          <row>
+            <entry>.proto Type</entry>
+            <entry>Notes</entry>
+            <entry>C++ Type</entry>
+            <entry>Java Type</entry>
+            <entry>Python Type</entry>
+          </row>
+        </thead>
+        <tbody>
+          
+          <row>
+            <entry id="double">double</entry>
+            <entry></entry>
+            <entry>double</entry>
+            <entry>double</entry>
+            <entry>float</entry>
+          </row>
+          
+          <row>
+            <entry id="float">float</entry>
+            <entry></entry>
+            <entry>float</entry>
+            <entry>float</entry>
+            <entry>float</entry>
+          </row>
+          
+          <row>
+            <entry id="int32">int32</entry>
+            <entry>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</entry>
+            <entry>int32</entry>
+            <entry>int</entry>
+            <entry>int</entry>
+          </row>
+          
+          <row>
+            <entry id="int64">int64</entry>
+            <entry>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</entry>
+            <entry>int64</entry>
+            <entry>long</entry>
+            <entry>int/long</entry>
+          </row>
+          
+          <row>
+            <entry id="uint32">uint32</entry>
+            <entry>Uses variable-length encoding.</entry>
+            <entry>uint32</entry>
+            <entry>int</entry>
+            <entry>int/long</entry>
+          </row>
+          
+          <row>
+            <entry id="uint64">uint64</entry>
+            <entry>Uses variable-length encoding.</entry>
+            <entry>uint64</entry>
+            <entry>long</entry>
+            <entry>int/long</entry>
+          </row>
+          
+          <row>
+            <entry id="sint32">sint32</entry>
+            <entry>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</entry>
+            <entry>int32</entry>
+            <entry>int</entry>
+            <entry>int</entry>
+          </row>
+          
+          <row>
+            <entry id="sint64">sint64</entry>
+            <entry>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</entry>
+            <entry>int64</entry>
+            <entry>long</entry>
+            <entry>int/long</entry>
+          </row>
+          
+          <row>
+            <entry id="fixed32">fixed32</entry>
+            <entry>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</entry>
+            <entry>uint32</entry>
+            <entry>int</entry>
+            <entry>int</entry>
+          </row>
+          
+          <row>
+            <entry id="fixed64">fixed64</entry>
+            <entry>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</entry>
+            <entry>uint64</entry>
+            <entry>long</entry>
+            <entry>int/long</entry>
+          </row>
+          
+          <row>
+            <entry id="sfixed32">sfixed32</entry>
+            <entry>Always four bytes.</entry>
+            <entry>int32</entry>
+            <entry>int</entry>
+            <entry>int</entry>
+          </row>
+          
+          <row>
+            <entry id="sfixed64">sfixed64</entry>
+            <entry>Always eight bytes.</entry>
+            <entry>int64</entry>
+            <entry>long</entry>
+            <entry>int/long</entry>
+          </row>
+          
+          <row>
+            <entry id="bool">bool</entry>
+            <entry></entry>
+            <entry>bool</entry>
+            <entry>boolean</entry>
+            <entry>boolean</entry>
+          </row>
+          
+          <row>
+            <entry id="string">string</entry>
+            <entry>A string must always contain UTF-8 encoded or 7-bit ASCII text.</entry>
+            <entry>string</entry>
+            <entry>String</entry>
+            <entry>str/unicode</entry>
+          </row>
+          
+          <row>
+            <entry id="bytes">bytes</entry>
+            <entry>May contain any arbitrary sequence of bytes.</entry>
+            <entry>string</entry>
+            <entry>ByteString</entry>
+            <entry>str</entry>
+          </row>
+          
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </section>
+
+</article>

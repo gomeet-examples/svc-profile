@@ -6,7 +6,7 @@ This service is generated with [gomeet](https://github.com/gomeet/gomeet). The i
 
 ```shell
 $ gomeet new github.com/gomeet-examples/svc-profile \
-  --default-prefixes=svc-,gomeet-svc- \
+  --default-prefixes=gomeet-svc-,svc- \
   --proto-name=pb
 ```
 

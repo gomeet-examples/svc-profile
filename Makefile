@@ -1,4 +1,4 @@
-DEFAULT_PREFIXES=svc-,gomeet-svc-
+DEFAULT_PREFIXES=gomeet-svc-,svc-
 SVC_PREFIX=svc-
 NAME = $(SVC_PREFIX)profile
 GO_PACKAGE_BASE = github.com/gomeet-examples
@@ -12,6 +12,12 @@ OS_NAME=$(shell go env GOOS)
 OS_ARCH=$(shell go env GOARCH)
 
 DB_TYPES=mysql
+
+DB_MYSQL_TEST_USERNAME?=gomeet
+DB_MYSQL_TEST_PASSWORD?=totomysql
+DB_MYSQL_TEST_SERVER?=localhost
+DB_MYSQL_TEST_PORT?=3306
+DB_MYSQL_TEST_DATABASE?=svc_profile_test
 
 DOCKER_TAG = $(shell cat VERSION | tr +- __)
 DOCKER_IMAGE_NAME = gomeetexamples/$(NAME)
@@ -197,6 +203,7 @@ package-clean:
 .PHONY: package-proto
 package-proto:
 	@echo "$(NAME): package-proto task"
+	mkdir -p $(PACKAGE_DIR)
 	cp -r third_party $(PACKAGE_DIR)/proto
 	cp $(GO_PROTO_PACKAGE_ALIAS)/*.proto $(PACKAGE_DIR)/proto/
 	cp VERSION $(PACKAGE_DIR)/proto/
@@ -351,7 +358,7 @@ tools-sync-protoc:
 
 .PHONY: tools-upgrade-gomeet
 tools-upgrade-gomeet: tools
-	@echo "dep-update-gomeet-utils $(ASKED_SVC)"
+	@echo "$(NAME): tools-upgrade-gomeet task"
 	_tools/bin/retool upgrade github.com/gomeet/gomeet-tools-markdown-server origin/master
 	_tools/bin/retool upgrade github.com/gomeet/go-proto-gomeetfaker/protoc-gen-gomeetfaker origin/master
 	_tools/bin/retool upgrade github.com/gomeet/gomeet/protoc-gen-gomeet-service origin/master
@@ -359,14 +366,17 @@ tools-upgrade-gomeet: tools
 
 .PHONY: tools-upgrade
 tools-upgrade: tools
+	@echo "$(NAME): tools-upgrade task"
 	GOPATH=$(shell pwd)/_tools/ && \
 		for tool in $(shell cat tools.json | grep "Repository" | awk '{print $$2}' | sed 's/,//g' | sed 's/"//g' ); do $$GOPATH/bin/retool upgrade $$tool origin/master ; done
 
 .PHONY: test
 test: build
-	cd service && go test
-	if [ -f $(GO_PROTO_PACKAGE_ALIAS)/*_test.go ]; then cd pb && go test; fi
-	_build/$(NAME) functest -e --random-port
+	@echo "$(NAME): test task"
+	@cd service && go test
+	@if [ -f $(GO_PROTO_PACKAGE_ALIAS)/*_test.go ]; then cd pb && go test; fi
+	@SVC_PROFILE_MYSQL_DSN="$(DB_MYSQL_TEST_USERNAME):$(DB_MYSQL_TEST_PASSWORD)@tcp($(DB_MYSQL_TEST_SERVER):$(DB_MYSQL_TEST_PORT))/$(DB_MYSQL_TEST_DATABASE)" && \
+		_build/$(NAME) functest -e --random-port --mysql-migrate --mysql-dsn $$SVC_PROFILE_MYSQL_DSN
 
 .PHONY: docker-test
 docker-test: docker
@@ -379,6 +389,7 @@ doc-server: tools
 
 .PHONY: gomeet-regenerate-project
 gomeet-regenerate-project: tools
+	@echo "$(NAME): gomeet-regenerate-project task"
 	_tools/bin/gomeet new ${GO_PACKAGE_NAME} \
 		--default-prefixes=${DEFAULT_PREFIXES} \
 		--proto-name=${GO_PROTO_PACKAGE_ALIAS} \

@@ -12,14 +12,20 @@ It has these top-level messages:
 	VersionResponse
 	ServiceStatus
 	ServicesStatusList
-	EchoRequest
-	EchoResponse
+	ProfileInfo
+	ProfileRequest
+	ProfileResponse
+	ProfileResponseLight
+	ProfileCreationRequest
+	ProfileListRequest
+	ProfileList
 */
 package pb
 
+import regexp "regexp"
+import fmt "fmt"
 import go_proto_validators "github.com/mwitkow/go-proto-validators"
 import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
 import math "math"
 import _ "google.golang.org/genproto/googleapis/api/annotations"
 import _ "github.com/mwitkow/go-proto-validators"
@@ -50,9 +56,87 @@ func (this *ServicesStatusList) Validate() error {
 	}
 	return nil
 }
-func (this *EchoRequest) Validate() error {
+
+var _regex_ProfileInfo_Uuid = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
+var _regex_ProfileInfo_Email = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+var _regex_ProfileInfo_Birthday = regexp.MustCompile("^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$")
+
+func (this *ProfileInfo) Validate() error {
+	if !_regex_ProfileInfo_Uuid.MatchString(this.Uuid) {
+		return go_proto_validators.FieldError("Uuid", fmt.Errorf(`value '%v' must be a string conforming to regex "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"`, this.Uuid))
+	}
+	if !_regex_ProfileInfo_Email.MatchString(this.Email) {
+		return go_proto_validators.FieldError("Email", fmt.Errorf(`value '%v' must be a string conforming to regex "^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"`, this.Email))
+	}
+	if !(len(this.Name) > 1) {
+		return go_proto_validators.FieldError("Name", fmt.Errorf(`value '%v' must length be greater than '1'`, this.Name))
+	}
+	if !(len(this.Name) < 151) {
+		return go_proto_validators.FieldError("Name", fmt.Errorf(`value '%v' must length be less than '151'`, this.Name))
+	}
+	if !_regex_ProfileInfo_Birthday.MatchString(this.Birthday) {
+		return go_proto_validators.FieldError("Birthday", fmt.Errorf(`value '%v' must be a string conforming to regex "^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$"`, this.Birthday))
+	}
 	return nil
 }
-func (this *EchoResponse) Validate() error {
+
+var _regex_ProfileRequest_Uuid = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
+
+func (this *ProfileRequest) Validate() error {
+	if !_regex_ProfileRequest_Uuid.MatchString(this.Uuid) {
+		return go_proto_validators.FieldError("Uuid", fmt.Errorf(`value '%v' must be a string conforming to regex "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"`, this.Uuid))
+	}
+	return nil
+}
+func (this *ProfileResponse) Validate() error {
+	if this.Info != nil {
+		if err := go_proto_validators.CallValidatorIfExists(this.Info); err != nil {
+			return go_proto_validators.FieldError("Info", err)
+		}
+	}
+	return nil
+}
+func (this *ProfileResponseLight) Validate() error {
+	return nil
+}
+
+var _regex_ProfileCreationRequest_Email = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+var _regex_ProfileCreationRequest_Birthday = regexp.MustCompile("^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$")
+
+func (this *ProfileCreationRequest) Validate() error {
+	if !_regex_ProfileCreationRequest_Email.MatchString(this.Email) {
+		return go_proto_validators.FieldError("Email", fmt.Errorf(`value '%v' must be a string conforming to regex "^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"`, this.Email))
+	}
+	if !(len(this.Name) > 1) {
+		return go_proto_validators.FieldError("Name", fmt.Errorf(`value '%v' must length be greater than '1'`, this.Name))
+	}
+	if !(len(this.Name) < 151) {
+		return go_proto_validators.FieldError("Name", fmt.Errorf(`value '%v' must length be less than '151'`, this.Name))
+	}
+	if !_regex_ProfileCreationRequest_Birthday.MatchString(this.Birthday) {
+		return go_proto_validators.FieldError("Birthday", fmt.Errorf(`value '%v' must be a string conforming to regex "^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$"`, this.Birthday))
+	}
+	return nil
+}
+func (this *ProfileListRequest) Validate() error {
+	if !(this.PageNumber > 0) {
+		return go_proto_validators.FieldError("PageNumber", fmt.Errorf(`value '%v' must be greater than '0'`, this.PageNumber))
+	}
+	if !(this.PageSize > 0) {
+		return go_proto_validators.FieldError("PageSize", fmt.Errorf(`value '%v' must be greater than '0'`, this.PageSize))
+	}
+	if !(this.PageSize < 1001) {
+		return go_proto_validators.FieldError("PageSize", fmt.Errorf(`value '%v' must be less than '1001'`, this.PageSize))
+	}
+	return nil
+}
+func (this *ProfileList) Validate() error {
+	for _, item := range this.Profiles {
+		if item != nil {
+			if err := go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return go_proto_validators.FieldError("Profiles", err)
+			}
+		}
+	}
 	return nil
 }

@@ -32,6 +32,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"github.com/gomeet-examples/svc-profile/models"
 	grpc_acl "github.com/gomeet/gomeet/utils/grpc-middlewares/acl"
 	grpc_cid "github.com/gomeet/gomeet/utils/grpc-middlewares/cid"
 )
@@ -128,6 +129,21 @@ func serve() {
 	}
 
 	log.Infof("%s version %s - %s", svc.Name, svc.Version, svcName)
+
+	// Mysql data migration on start
+	if mysqlMigrate {
+		if mysqlDataSourceName == "" {
+			log.Errorf("The --mysql-dsn flag is required for automatic schema migration")
+			os.Exit(1)
+		}
+
+		err := models.MigrateSchema(mysqlDataSourceName)
+
+		if err != nil {
+			log.Errorf("Database schema migration failure: %v\n", err)
+			os.Exit(1)
+		}
+	}
 
 	if grpcServerAddress != "" && httpServerAddress != "" {
 		serveOnMultipleAddresses(grpcServerAddress, httpServerAddress)

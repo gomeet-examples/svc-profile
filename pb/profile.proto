@@ -14,65 +14,154 @@ import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 option (gogoproto.equal_all) = true;
 option (gogoproto.populate_all) = true;
 option (gogoproto.testgen_all) = true;
+option (gogoproto.goproto_registration) = true; // for use grpc-gateway with gogo's generator the option goproto_registration is needed
 
 service Profile {
-	// Version method receives no paramaters and returns a version message.
-	rpc Version(EmptyMessage) returns (VersionResponse) {
-		option (google.api.http) = {
-			get: "/api/v1/version"
-		};
-	}
+  // Version method receives no paramaters and returns a version message.
+  rpc Version(EmptyMessage) returns (VersionResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/version"
+    };
+  }
 
-	// ServicesStatus method receives no paramaters and returns all services status message
-	rpc ServicesStatus(EmptyMessage) returns (ServicesStatusList) {
-		option (google.api.http) = {
-			get: "/api/v1/services/status"
-		};
-	}
+  // ServicesStatus method receives no paramaters and returns all services status message
+  rpc ServicesStatus(EmptyMessage) returns (ServicesStatusList) {
+    option (google.api.http) = {
+      get: "/api/v1/services/status"
+    };
+  }
 
-	// Echo method receives a simple message and returns it.
-	rpc Echo(EchoRequest) returns (EchoResponse) {
-		option (google.api.http) = {
-			post: "/api/v1/echo"
-			body: "*"
-		};
-	}
+  // Create attempts to create a new profile.
+  rpc Create(ProfileCreationRequest) returns (ProfileResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/create"
+      body: "*"
+    };
+  }
+
+  // Read returns information about an existing profile.
+  rpc Read(ProfileRequest) returns (ProfileInfo) {
+    option (google.api.http) = {
+      post: "/api/v1/read"
+      body: "*"
+    };
+  }
+
+  // List returns a list of profiles matching a set of criteria.
+  rpc List(ProfileListRequest) returns (ProfileList) {
+    option (google.api.http) = {
+      post: "/api/v1/list"
+      body: "*"
+    };
+  }
+
+  // Update attempts to update an existing profile.
+  rpc Update(ProfileInfo) returns (ProfileResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/update"
+      body: "*"
+    };
+  }
+
+  // SoftDelete attempts to delete an existing profile logically.
+  rpc SoftDelete(ProfileRequest) returns (ProfileResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/soft_delete"
+      body: "*"
+    };
+  }
+
+  // HardDelete attempts to delete an existing profile physically.
+  rpc HardDelete(ProfileRequest) returns (ProfileResponseLight) {
+    option (google.api.http) = {
+      post: "/api/v1/hard_delete"
+      body: "*"
+    };
+  }
 }
 
 message EmptyMessage {}
 
 // VersionMessage represents a version message
 message VersionResponse {
-	// Id represents the message identifier.
-	string name    = 1 [(gomeetfaker.field).app.name = true];
-	string version = 2 [(gomeetfaker.field).app.version = true];
+  // Id represents the message identifier.
+  string name    = 1 [(gomeetfaker.field).app.name = true];
+  string version = 2 [(gomeetfaker.field).app.version = true];
 }
 
 // SeviceStatus represents a sub services status message
 message ServiceStatus {
-	enum Status {
-		OK          = 0;
-		UNAVAILABLE = 1;
-	}
-	string name    = 1 [(gomeetfaker.field).app.name = true]; // name of service
-	string version = 2 [(gomeetfaker.field).app.version = true]; // version of service
-	Status status  = 3; // status of service see enum Status
-	string e_msg   = 4 [(gomeetfaker.field).skip = true];; // error message can be empty
+  enum Status {
+    OK          = 0;
+    UNAVAILABLE = 1;
+  }
+  string name    = 1 [(gomeetfaker.field).app.name = true]; // name of service
+  string version = 2 [(gomeetfaker.field).app.version = true]; // version of service
+  Status status  = 3; // status of service see enum Status
+  string e_msg   = 4 [(gomeetfaker.field).skip = true];; // error message can be empty
 }
 
 // ServicesStatusList is the sub services status list
 message ServicesStatusList {
-	repeated ServiceStatus services = 1;
+  repeated ServiceStatus services = 1;
 }
 
-// EchoRequest represents a simple message sent to the Echo service.
-message EchoRequest {
-	string uuid    = 1 [(gomeetfaker.field).uuid.version = "V4"]; // Uuid represents the message identifier.
-  string content = 2 [(gomeetfaker.field).lorem.string = true]; // some content
+enum Genders {
+  UNKNOW = 0; // normaly never
+  MALE   = 1; // male gender
+  FEMALE = 2; // female gender
 }
 
-// EchoResponse represents a simple message that the Echo service return.
-message EchoResponse {
-	string uuid    = 1 [(gomeetfaker.field).uuid.version = "V4"]; // Uuid represents the message identifier.
-  string content = 2 [(gomeetfaker.field).lorem.string = true]; // some content
+// ProfileInfo encodes information about a profile.
+message ProfileInfo {
+  string  uuid       = 1 [(gomeetfaker.field).uuid.version = "V4", (validator.field) = {regex: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"}]; // internal profile ID
+  Genders gender     = 2 [(gomeetfaker.field).enum.random_no_empty = true]; // profile role
+  string  email      = 3 [(gomeetfaker.field).internet.email = true, (validator.field) = {regex: "^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"}]; // profile email
+  string  name       = 4 [(gomeetfaker.field).internet.user_name = true, (validator.field) = {length_gt: 1, length_lt: 151}]; // profile name
+  string  birthday   = 5 [(gomeetfaker.field).time.birthday = {min: 17, max: 99}, (validator.field) = {regex: "^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$"}]; // profile birthday
+  string  created_at = 6 [(gomeetfaker.field).date = {now: true, format: "2006-01-02T15:04:05Z07:00"}]; // creation time (UTC - RFC 3339 format)
+  string  updated_at = 7 [(gomeetfaker.field).date = {now: true, format: "2006-01-02T15:04:05Z07:00"}]; // modification time (UTC - RFC 3339 format)
+  string  deleted_at = 8 [(gomeetfaker.field).date = {now: true, format: "2006-01-02T15:04:05Z07:00"}]; // deletion time (UTC - RFC 3339 format if the profile was logically deleted, empty otherwise)
 }
+
+// ProfileRequest encodes a profile identifier.
+message ProfileRequest {
+  string uuid = 1 [(gomeetfaker.field).uuid.version = "V4", (validator.field) = {regex: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"}]; // profile ID
+}
+
+// ProfileResponse encodes the result of a profile operation.
+message ProfileResponse {
+  bool        ok   = 1 [(gomeetfaker.field).value.content = "1"]; // indicates whether the operation (authentication, creation, update or delete) was successful
+  ProfileInfo info = 2;                                           // profile information (unreliable if the operation failed)
+}
+
+// ProfileResponseLight encodes the result of a profile operation.
+message ProfileResponseLight {
+  bool ok = 1 [(gomeetfaker.field).value.content = "1"]; // indicates whether the operation was successful
+}
+
+// ProfileCreationRequest encodes a profile creation request.
+message ProfileCreationRequest {
+  Genders gender     = 1 [(gomeetfaker.field).enum.random_no_empty = true];                                                                                                                                                                // profile role
+  string  email      = 2 [(gomeetfaker.field).internet.email = true, (validator.field) = {regex: "^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"}]; // profile email
+  string  name       = 3 [(gomeetfaker.field).internet.user_name = true, (validator.field) = {length_gt: 1, length_lt: 151}];                                                                                                           // profile name
+  string  birthday   = 4 [(gomeetfaker.field).time.birthday = {min: 17, max: 99}, (validator.field) = {regex: "^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$"}];                                                      // profile birthday
+}
+
+// ProfileListRequest encodes a set of criteria for the retrieval of a list of profiles.
+message ProfileListRequest {
+  uint32  page_number          = 1 [(gomeetfaker.field).value.content = "1", (validator.field).int_gt = 0];                    // page number (starting from 1)
+  uint32  page_size            = 2 [(gomeetfaker.field).value.content = "200", (validator.field) = {int_gt: 0, int_lt: 1001}]; // number of results in a page
+  string  order                = 3 [(gomeetfaker.field).value.content = "created_at asc"];                                     // result ordering specification (default "created_at asc")
+	bool    exclude_soft_deleted = 4 [(gomeetfaker.field).value.content = "true"];                                               // if true, excludes logically-deleted profiles from the result set
+	bool    soft_deleted_only    = 5 [(gomeetfaker.field).value.content = "false"];                                              // if true, restricts the result set to logically-deleted profiles
+  Genders gender               = 6 [(gomeetfaker.field).enum.random_no_empty = true];                                          // role to search for
+}
+
+// ProfileList encodes the result of a ProfileListRequest.
+message ProfileList {
+  uint32               result_set_size = 1 [(gomeetfaker.field).value.content = "5"];     // total number of results
+  bool                 has_more        = 2 [(gomeetfaker.field).value.content = "false"]; // true if there are more results for the ProfileListRequest
+  repeated ProfileInfo profiles        = 3 [(gomeetfaker.field).repeated = 5];            // list of ProfileInfo messages
+}
+
