@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Nothing
+
+## 0.0.1 - 2018-02-26
+
 - Creation from [gomeet](https://github.com/gomeet/gomeet)
 
 ```shell
