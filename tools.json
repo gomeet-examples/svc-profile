@@ -3,7 +3,7 @@
     {
       "Repository": "github.com/golang/protobuf/protoc-gen-go",
       "Commit": "1643683e1b54a9e88ad26d98f81400c8c9d9f4f9"
-    }, 
+    },
     {
       "Repository": "github.com/gogo/protobuf/protoc-gen-gogo",
       "Commit": "26de2f9a7d3b1826f275e7a97c8cad5080589426"
@@ -26,11 +26,11 @@
     },
     {
       "Repository": "github.com/gomeet/gomeet/protoc-gen-gomeet-service",
-      "Commit": "b5805a8e2fdd986ebe58b4a24b189942704840de"
+      "Commit": "69e9543dca79577e68f5e5a3a38c9dec405d4a3c"
     },
     {
       "Repository": "github.com/gomeet/gomeet/gomeet",
-      "Commit": "b5805a8e2fdd986ebe58b4a24b189942704840de"
+      "Commit": "69e9543dca79577e68f5e5a3a38c9dec405d4a3c"
     },
     {
       "Repository": "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc",
