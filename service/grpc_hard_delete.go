@@ -36,7 +36,7 @@ func (s *profileServer) HardDelete(ctx context.Context, req *pb.ProfileRequest) 
 		return res, status.Errorf(codes.Internal, err.Error())
 	}
 
-	err = models.DeleteDevicePhysically(
+	err = models.DeleteProfilePhysically(
 		s.mysqlHandle,
 		req.GetUuid(),
 	)

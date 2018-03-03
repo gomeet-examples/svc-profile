@@ -20,6 +20,9 @@ var (
 	cli pb.ProfileClient
 )
 
+// TODO flags or ENV VAR support for dsn databases and sub-service definitions
+// for more information see. https://siongui.github.io/2017/04/28/command-line-argument-in-golang-test/
+
 func TestMain(m *testing.M) {
 	//TODO: need refactoring in gomeet generator
 	sMdl := grpc.StreamInterceptor(grpc_middleware.ChainStreamServer())
@@ -36,7 +39,8 @@ func TestMain(m *testing.M) {
 		"",
 		"",
 		"",
-		"",
+		"", // dsn info come here if exists
+		// subservices come here if exists
 	)
 	go serve()
 

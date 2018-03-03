@@ -223,8 +223,8 @@ func DeleteProfileLogically(db *gorm.DB, sUuid string) (*Profile, error) {
 	return profile, err
 }
 
-// DeleteDevicePhysically performs the physical deletion of the device with the specified ID.
-func DeleteDevicePhysically(db *gorm.DB, sUuid string) error {
+// DeleteProfilePhysically performs the physical deletion of the device with the specified ID.
+func DeleteProfilePhysically(db *gorm.DB, sUuid string) error {
 	if _, err := uuid.Parse(sUuid); err != nil {
 		return fmt.Errorf("%s bad UUID %s", err)
 	}
