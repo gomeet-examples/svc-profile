@@ -115,7 +115,7 @@ func testHardDeleteResponse(
 	}
 
 	if len(extras) > 0 {
-		for sUuid, _ := range extras {
+		for sUuid := range extras {
 			res, err := client.GetGRPCClient().HardDelete(ctx, &pb.ProfileRequest{Uuid: sUuid})
 			if res == nil || err != nil || res.GetOk() != true {
 				failures = append(failures, TestFailure{Procedure: "HardDelete", Message: fmt.Sprintf("deletion of created profile %s fails error (%v) - res (%v)", sUuid, err, res)})
