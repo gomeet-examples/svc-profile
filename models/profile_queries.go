@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func diffTime(a, b time.Time) (year, month, day, hour, min, sec int) {

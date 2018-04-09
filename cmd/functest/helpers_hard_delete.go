@@ -43,7 +43,7 @@ func testHardDeleteResponse(
 ) (failures []TestFailure) {
 	client, ctx, err := grpcClient(config)
 	if err != nil {
-		failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: fmt.Sprintf("gRPC client initialization error (%v)", err)})
+		failures = append(failures, TestFailure{Procedure: "HardDelete", Message: fmt.Sprintf("gRPC client initialization error (%v)", err)})
 		return failures
 	}
 	defer client.Close()
@@ -118,7 +118,7 @@ func testHardDeleteResponse(
 		for sUuid, _ := range extras {
 			res, err := client.GetGRPCClient().HardDelete(ctx, &pb.ProfileRequest{Uuid: sUuid})
 			if res == nil || err != nil || res.GetOk() != true {
-				failures = append(failures, TestFailure{Procedure: "SoftDelete", Message: fmt.Sprintf("deletion of created profile %s fails error (%v) - res (%v)", sUuid, err, res)})
+				failures = append(failures, TestFailure{Procedure: "HardDelete", Message: fmt.Sprintf("deletion of created profile %s fails error (%v) - res (%v)", sUuid, err, res)})
 			}
 		}
 	}
